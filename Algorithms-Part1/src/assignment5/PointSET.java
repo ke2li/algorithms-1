@@ -1,16 +1,18 @@
-import java.awt.geom.Point2D;
-import java.util.Set;
-import edu.princeton.cs.algs4.SET<Key>;
+import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.SET;
+import edu.princeton.cs.algs4.StdDraw;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class PointSET {
-	private Set<Point2D> set;
+	private SET<Point2D> set;
 	private Point2D[] inRange;
 	
 	public PointSET() {
-		set = new SET();
+		set = new SET<Point2D>();
 	}
 	public boolean isEmpty() {
 		if(set.size() == 0) {
@@ -27,9 +29,7 @@ public class PointSET {
 	}
 	public boolean contains(Point2D p) {
 		if(p==null) throw new java.lang.IllegalArgumentException();
-		for(Point2D i: set) {
-			if(p.equals(i)) return true;
-		}
+		if(set.contains(p)) return true;
 		return false;
 	}
 	public void draw() {
@@ -44,11 +44,11 @@ public class PointSET {
 		for(Point2D i : set) {
 			if(rect.contains(i)) temp.add(i);
 		}
-		inRange = temp.toArray(new Point2D[temp.size()])
+		inRange = temp.toArray(new Point2D[temp.size()]);
 	}
 	public Iterable<Point2D> range(RectHV rect){
 		if(rect==null) throw new java.lang.IllegalArgumentException();
-		return new Iterable<Point2D> {
+		return new Iterable<Point2D>() {
 			public Iterator<Point2D> iterator() {
 				constructRange(rect);
 				return new RangeIterator();
@@ -58,7 +58,7 @@ public class PointSET {
 	private class RangeIterator implements Iterator<Point2D>{
 		int index = 0;
 		public boolean hasNext() {
-			return index<inRange.size();
+			return index<inRange.length;
 		}
 		public void remove() {
 			throw new java.lang.UnsupportedOperationException();
@@ -73,11 +73,12 @@ public class PointSET {
 	public Point2D nearest(Point2D p) {
 		if(p==null) throw new java.lang.IllegalArgumentException();
 		Point2D min = null;
-		for(Point2D i :set) {
+		for(Point2D i : set) {
 			if(min == null) min = i;
 			else if(p.distanceSquaredTo(i) < p.distanceSquaredTo(min)) {
 				min = i;
 			}
 		}
+		return min;
 	}
 }
